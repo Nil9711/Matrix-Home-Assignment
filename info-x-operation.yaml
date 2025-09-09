@@ -56,19 +56,19 @@ paths:
       description: Authenticate user and return JWT token
       operationId: login
       security: []
-    requestBody:
-      required: true
-      content:
-        application/json:
-          schema:
-            $ref: "#/components/schemas/LoginRequest"
-    responses:
-      "200":
-        $ref: "#/components/responses/SuccessfulLogin"
-      "401":
-        $ref: "#/components/responses/InvalidCredentials"
-      "400":
-        $ref: "#/components/responses/BadRequest"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessfulLogin"
+        "401":
+          $ref: "#/components/responses/InvalidCredentials"
+        "400":
+          $ref: "#/components/responses/BadRequest"
 
 security:
   - bearerAuth: []
