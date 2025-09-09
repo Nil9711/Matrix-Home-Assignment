@@ -1,0 +1,217 @@
+openapi: 3.0.4
+servers:
+  - description: SwaggerHub API Auto Mocking
+    url: https://virtserver.swaggerhub.com/company-ec3/Matrix-Home-Assignment-V2/1.0.0
+info:
+  version: "1.0.0"
+  title: math-calculations
+  description: An API designed to calculate basic mathematical operations given two numbers.
+paths:
+  /health-check:
+    get:
+      x-swagger-router-controller: Health
+      description: returns the health status of the application.
+      operationId: healthCheck
+      responses:
+        "200":
+          $ref: "#/components/responses/HealthCheckSuccess"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+  /calculate:
+    post:
+      x-swagger-router-controller: Math
+      description: returns the result of a basic calculation given 2 numbers.
+      operationId: calculate
+      parameters:
+        - name: X-Operation
+          in: header
+          required: true
+          description: The mathematical operation to perform
+          schema:
+            type: string
+            enum:
+              - add
+              - subtract
+              - multiply
+              - divide
+          example: add
+
+      requestBody:
+        $ref: "#/components/requestBodies/TwoNumbersRequest"
+
+      responses:
+        "200":
+          $ref: "#/components/responses/SuccessfulCalculation"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "401":
+          $ref: "#/components/responses/Unauthorized"
+        "422":
+          $ref: "#/components/responses/DivisionByZero"
+        "500":
+          $ref: "#/components/responses/InternalServerError"
+
+  /login:
+    post:
+      description: Authenticate user and return JWT token
+      operationId: login
+      security: []
+    requestBody:
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginRequest"
+    responses:
+      "200":
+        $ref: "#/components/responses/SuccessfulLogin"
+      "401":
+        $ref: "#/components/responses/InvalidCredentials"
+      "400":
+        $ref: "#/components/responses/BadRequest"
+
+security:
+  - bearerAuth: []
+
+components:
+  responses:
+    HealthCheckSuccess:
+      description: Successfully checked app health
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiResponse"
+
+    SuccessfulCalculation:
+      description: Successful mathematical operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiResponse"
+
+    DivisionByZero:
+      description: Unprocessable - Cannot divide by zero
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    Unauthorized:
+      description: Unauthorized - Invalid or missing JWT token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    SuccessfulLogin:
+      description: Successful authentication
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginResponse"
+
+    InvalidCredentials:
+      description: Invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  schemas:
+    AnyTwoNumbers:
+      required:
+        - number
+        - secondNumber
+      type: object
+      properties:
+        number:
+          type: number
+          example: 10.2
+        secondNumber:
+          type: number
+          example: 4.8
+
+    ApiResponse:
+      type: object
+      properties:
+        result:
+          type: number
+          example: 100
+        message:
+          type: string
+          example: "Operation completed successfully"
+        status:
+          type: string
+          example: "success"
+      required:
+        - message
+        - status
+
+    LoginRequest:
+      type: object
+      required:
+        - username
+        - password
+      properties:
+        username:
+          type: string
+          example: "admin"
+        password:
+          type: string
+          format: password
+          example: "password123"
+
+    LoginResponse:
+      type: object
+      required:
+        - token
+        - expiresIn
+      properties:
+        token:
+          type: string
+          example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..."
+          description: "JWT token for authentication"
+        expiresIn:
+          type: integer
+          example: 3600
+          description: "Token expiration time in seconds"
+
+    Error:
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+      required:
+        - code
+        - message
+
+  requestBodies:
+    TwoNumbersRequest:
+      description: Request body containing two numbers for mathematical operations
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AnyTwoNumbers"
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token for API authentication
