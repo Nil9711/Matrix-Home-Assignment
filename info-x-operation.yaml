@@ -1,7 +1,7 @@
 openapi: 3.0.4
 servers:
-  - description: SwaggerHub API Auto Mocking
-    url: https://virtserver.swaggerhub.com/company-ec3/Matrix-Home-Assignment-V2/1.0.0
+  - url: localhost:8080
+    description: Local Development Server
 info:
   version: "1.0.0"
   title: math-calculations
