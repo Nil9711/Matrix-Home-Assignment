@@ -1,17 +1,16 @@
 "use strict";
 
 const utils = require("../utils/writer.js");
-const auth = require("../middleware/auth.js");
+const auth = require("../helpers/auth.js");
 const Service = require("../service/MathService.js");
 
-module.exports.calculate = function calculate(req, res, next, body) {
+function calculate(req, res, next, body) {
   const headers = req.headers;
+  const operation = headers["x-operation"];
 
   if (!auth.verifyToken(req)) {
     return utils.writeJson(res, { error: "Unauthorized" }, 401);
   }
-
-  const operation = headers["x-operation"];
 
   Service.calculate(req.body, operation)
     .then((response) => {
@@ -28,4 +27,8 @@ module.exports.calculate = function calculate(req, res, next, body) {
         statusCode
       );
     });
+}
+
+module.exports = {
+  calculate,
 };

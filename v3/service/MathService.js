@@ -9,7 +9,7 @@ const MAX_SAFE_VALUE = Number.MAX_SAFE_INTEGER; // 9,007,199,254,740,991
  * xOperation String The mathematical operation to perform
  * returns ApiResponse
  **/
-exports.calculate = function (body, xOperation) {
+function calculate(body, xOperation) {
   return new Promise(function (resolve, reject) {
     const { number, secondNumber } = body;
 
@@ -78,4 +78,8 @@ exports.calculate = function (body, xOperation) {
       status: "success",
     });
   });
+}
+
+module.exports = {
+  calculate,
 };

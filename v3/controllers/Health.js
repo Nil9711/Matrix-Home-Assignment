@@ -3,7 +3,7 @@
 const utils = require("../utils/writer.js");
 const Service = require("../service/HealthService.js");
 
-module.exports.healthCheck = function healthCheck(req, res, next) {
+function healthCheck(req, res, next) {
   Service.healthCheck()
     .then(function (response) {
       return utils.writeJson(res, response);
@@ -11,4 +11,8 @@ module.exports.healthCheck = function healthCheck(req, res, next) {
     .catch(function (response) {
       return utils.writeJson(res, response);
     });
+}
+
+module.exports = {
+  healthCheck,
 };

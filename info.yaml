@@ -1,0 +1,252 @@
+openapi: 3.0.4
+info:
+  title: math-calculations
+  description:
+    An API designed to calculate basic mathematical operations given two
+    numbers.
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+    description: Local Development Server
+security:
+  - bearerAuth: []
+paths:
+  /healthCheck:
+    get:
+      description: returns the health status of the application.
+      operationId: healthCheck
+      responses:
+        "200":
+          description: Successfully checked app health
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security: []
+      x-swagger-router-controller: Health
+  /calculate:
+    post:
+      description: returns the result of a basic calculation given 2 numbers.
+      operationId: calculate
+      parameters:
+        - name: X-Operation
+          in: header
+          description: The mathematical operation to perform
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            enum:
+              - add
+              - subtract
+              - multiply
+              - divide
+          example: add
+      requestBody:
+        $ref: "#/components/requestBodies/TwoNumbersRequest"
+      responses:
+        "200":
+          description: Successful mathematical operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/ApiResponse"
+        "400":
+          description: Bad request - invalid input, numbers too large, or invalid operation
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Unauthorized - Invalid or missing JWT token
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "422":
+          description: Unprocessable - Cannot divide by zero
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "500":
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      x-swagger-router-controller: Math
+  /login:
+    post:
+      description: Authenticate user and return JWT token
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/LoginRequest"
+        required: true
+      responses:
+        "200":
+          description: Successful authentication
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/LoginResponse"
+        "400":
+          description: Bad request - invalid input
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+        "401":
+          description: Invalid credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+      security: []
+      x-swagger-router-controller: Auth
+components:
+  schemas:
+    AnyTwoNumbers:
+      required:
+        - number
+        - secondNumber
+      type: object
+      properties:
+        number:
+          type: number
+          example: 10.2
+        secondNumber:
+          type: number
+          example: 4.8
+    ApiResponse:
+      required:
+        - message
+        - status
+      type: object
+      properties:
+        result:
+          type: number
+          example: 100
+        message:
+          type: string
+          example: Operation completed successfully
+        status:
+          type: string
+          example: success
+      example:
+        result: 100
+        message: Operation completed successfully
+        status: success
+    LoginRequest:
+      required:
+        - password
+        - username
+      type: object
+      properties:
+        username:
+          type: string
+          example: nil
+        password:
+          type: string
+          format: password
+          example: nil
+    LoginResponse:
+      required:
+        - expiresIn
+        - token
+      type: object
+      properties:
+        token:
+          type: string
+          description: JWT token for authentication
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+        expiresIn:
+          type: integer
+          description: Token expiration time in seconds
+          example: 3600
+      example:
+        expiresIn: 3600
+        token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+    Error:
+      required:
+        - code
+        - message
+      type: object
+      properties:
+        code:
+          type: string
+        message:
+          type: string
+  responses:
+    HealthCheckSuccess:
+      description: Successfully checked app health
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiResponse"
+    SuccessfulCalculation:
+      description: Successful mathematical operation
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/ApiResponse"
+    DivisionByZero:
+      description: Unprocessable - Cannot divide by zero
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    BadRequest:
+      description: Bad request - invalid input
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    Unauthorized:
+      description: Unauthorized - Invalid or missing JWT token
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    InternalServerError:
+      description: Internal server error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+    SuccessfulLogin:
+      description: Successful authentication
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/LoginResponse"
+    InvalidCredentials:
+      description: Invalid credentials
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+  requestBodies:
+    TwoNumbersRequest:
+      description: Request body containing two numbers for mathematical operations
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/AnyTwoNumbers"
+      required: true
+  securitySchemes:
+    bearerAuth:
+      type: http
+      description: JWT token for API authentication
+      scheme: bearer
+      bearerFormat: JWT

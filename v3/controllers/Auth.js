@@ -3,7 +3,7 @@
 const utils = require("../utils/writer.js");
 const Service = require("../service/AuthService.js");
 
-module.exports.login = function login(req, res, next, body) {
+function login(req, res, next, body) {
   Service.login(body)
     .then(function (response) {
       return utils.writeJson(res, response);
@@ -11,4 +11,8 @@ module.exports.login = function login(req, res, next, body) {
     .catch(function (response) {
       return utils.writeJson(res, response);
     });
+}
+
+module.exports = {
+  login,
 };

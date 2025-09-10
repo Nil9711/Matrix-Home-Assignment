@@ -1,6 +1,6 @@
 "use strict";
 
-const auth = require("../middleware/auth");
+const auth = require("../helpers/auth");
 
 const validUsers = {
   nil: "nil",
@@ -15,7 +15,7 @@ const validUsers = {
  * body LoginRequest
  * returns LoginResponse
  **/
-exports.login = function (body) {
+function login(body) {
   return new Promise(function (resolve, reject) {
     const { username, password } = body;
 
@@ -36,4 +36,8 @@ exports.login = function (body) {
       });
     }
   });
+}
+
+module.exports = {
+  login,
 };

@@ -1,6 +1,6 @@
-require('dotenv').config();
+require("dotenv").config();
 
-"use strict";
+("use strict");
 
 var path = require("path");
 var http = require("http");
@@ -13,10 +13,7 @@ var options = {
   },
 };
 
-var expressAppConfig = oas3Tools.expressAppConfig(
-  path.join(__dirname, "api/openapi.yaml"),
-  options
-);
+var expressAppConfig = oas3Tools.expressAppConfig(path.join(__dirname, "api/openapi.yaml"), options);
 
 var app = expressAppConfig.getApp();
 

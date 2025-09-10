@@ -5,8 +5,12 @@
  *
  * returns ApiResponse
  **/
-exports.healthCheck = function () {
+function healthCheck() {
   return new Promise(function (resolve, reject) {
-    resolve({status: "OK"});
+    resolve({ status: "OK" });
   });
+}
+
+module.exports = {
+  healthCheck,
 };

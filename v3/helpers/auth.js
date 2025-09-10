@@ -34,12 +34,12 @@ function generateJWT(user, expiresIn = 3600) {
 function verifyToken(req) {
   try {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.split(' ')[1];
+    const token = authHeader?.split(" ")[1];
     if (!token) return null;
     const isVerified = jwt.verify(token, JWT_SECRET);
-    return isVerified
+    return isVerified;
   } catch (error) {
-    return null
+    return null;
   }
 }
 
