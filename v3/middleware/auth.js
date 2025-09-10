@@ -11,9 +11,8 @@ const JWT_SECRET = process.env.JWT_SECRET;
  * @returns {Object} Object containing token and expiration info
  */
 function generateJWT(user, expiresIn = 3600) {
-  console.log();
   const payload = {
-    username: user.username,
+    user,
     iat: Math.floor(Date.now() / 1000),
   };
 
@@ -32,11 +31,13 @@ function generateJWT(user, expiresIn = 3600) {
  * @param {string} token - JWT token to verify
  * @returns {Object|null} Decoded token or null if invalid
  */
-function verifyToken(headers) {
+function verifyToken(req) {
   try {
-    const token = headers.authorization?.split(' ')[1];
+    const authHeader = req.headers.authorization;
+    const token = authHeader?.split(' ')[1];
     if (!token) return null;
-    return jwt.verify(token, JWT_SECRET);
+    const isVerified = jwt.verify(token, JWT_SECRET);
+    return isVerified
   } catch (error) {
     return null
   }

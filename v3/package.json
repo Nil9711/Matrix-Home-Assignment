@@ -4,8 +4,10 @@
   "description": "An API designed to calculate basic mathematical operations given two numbers.",
   "main": "index.js",
   "scripts": {
-    "prestart": "npm install",
-    "start": "node index.js"
+    "prestart": "npm install && npm test",
+    "start": "node index.js",
+    "test": "node tests/test.js",
+    "test-and-start": "npm test && npm start"
   },
   "keywords": [
     "swagger"
@@ -14,6 +16,7 @@
   "private": true,
   "dependencies": {
     "connect": "^3.2.0",
+    "dotenv": "^17.2.2",
     "js-yaml": "^3.3.0",
     "jsonwebtoken": "^9.0.2",
     "oas3-tools": "^2.2.3"

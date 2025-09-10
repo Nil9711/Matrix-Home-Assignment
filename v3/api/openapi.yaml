@@ -1,12 +1,10 @@
-openapi: 3.0.4
+openapi: 3.1.0
 info:
   title: math-calculations
   description: An API designed to calculate basic mathematical operations given two
     numbers.
   version: 1.0.0
 servers:
-- url: https://virtserver.swaggerhub.com/company-ec3/Matrix-Home-Assignment-V2/1.0.0
-  description: SwaggerHub API Auto Mocking
 - url: http://localhost:8080
   description: Local Development Server
 security:

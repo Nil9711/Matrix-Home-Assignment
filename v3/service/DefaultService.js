@@ -4,11 +4,11 @@ const MAX_SAFE_VALUE = Number.MAX_SAFE_INTEGER; // 9,007,199,254,740,991
 const auth = require("../middleware/auth");
 
 const validUsers = {
-      'nil': "nil",
-      'admin': 'password123',
-      'user': 'mypassword',
-      'demo': 'demo123'
-}
+  nil: "nil",
+  admin: "password123",
+  user: "mypassword",
+  demo: "demo123",
+};
 /**
  * returns the result of a basic calculation given 2 numbers.
  *
@@ -89,7 +89,7 @@ exports.calculate = function (body, xOperation) {
  **/
 exports.healthCheck = function () {
   return new Promise(function (resolve, reject) {
-    resolve("OK");
+    resolve({status: "OK"});
   });
 };
 
@@ -102,22 +102,21 @@ exports.healthCheck = function () {
 exports.login = function (body) {
   return new Promise(function (resolve, reject) {
     const { username, password } = body;
-    console.log("Credentials Received ", { username, password });
 
     if (validUsers[username] && validUsers[username] === password) {
-      const tokenData = auth.generateJWT({ 
-        username: username,
+      const tokenData = auth.generateJWT({
+        username,
       });
-      
+
       resolve({
         token: tokenData.token,
         expiresIn: tokenData.expiresIn,
-        message: 'Login successful'
+        message: "Login successful",
       });
     } else {
       reject({
-        code: 'INVALID_CREDENTIALS',
-        message: 'Invalid username or password'
+        code: "INVALID_CREDENTIALS",
+        message: "Invalid username or password",
       });
     }
   });
