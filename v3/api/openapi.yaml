@@ -1,14 +1,15 @@
-openapi: 3.1.0
+openapi: 3.0.4
 info:
   title: math-calculations
-  description: An API designed to calculate basic mathematical operations given two
+  description:
+    An API designed to calculate basic mathematical operations given two
     numbers.
   version: 1.0.0
 servers:
-- url: http://localhost:8080
-  description: Local Development Server
+  - url: http://localhost:8080
+    description: Local Development Server
 security:
-- bearerAuth: []
+  - bearerAuth: []
 paths:
   /healthCheck:
     get:
@@ -28,26 +29,26 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       security: []
-      x-swagger-router-controller: Default
+      x-swagger-router-controller: Health
   /calculate:
     post:
       description: returns the result of a basic calculation given 2 numbers.
       operationId: calculate
       parameters:
-      - name: X-Operation
-        in: header
-        description: The mathematical operation to perform
-        required: true
-        style: simple
-        explode: false
-        schema:
-          type: string
-          enum:
-          - add
-          - subtract
-          - multiply
-          - divide
-        example: add
+        - name: X-Operation
+          in: header
+          description: The mathematical operation to perform
+          required: true
+          style: simple
+          explode: false
+          schema:
+            type: string
+            enum:
+              - add
+              - subtract
+              - multiply
+              - divide
+          example: add
       requestBody:
         $ref: "#/components/requestBodies/TwoNumbersRequest"
       responses:
@@ -58,7 +59,7 @@ paths:
               schema:
                 $ref: "#/components/schemas/ApiResponse"
         "400":
-          description: Bad request - invalid input
+          description: Bad request - invalid input, numbers too large, or invalid operation
           content:
             application/json:
               schema:
@@ -81,7 +82,7 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/Error"
-      x-swagger-router-controller: Default
+      x-swagger-router-controller: Math
   /login:
     post:
       description: Authenticate user and return JWT token
@@ -112,13 +113,13 @@ paths:
               schema:
                 $ref: "#/components/schemas/Error"
       security: []
-      x-swagger-router-controller: Default
+      x-swagger-router-controller: Auth
 components:
   schemas:
     AnyTwoNumbers:
       required:
-      - number
-      - secondNumber
+        - number
+        - secondNumber
       type: object
       properties:
         number:
@@ -129,8 +130,8 @@ components:
           example: 4.8
     ApiResponse:
       required:
-      - message
-      - status
+        - message
+        - status
       type: object
       properties:
         result:
@@ -148,21 +149,21 @@ components:
         status: success
     LoginRequest:
       required:
-      - password
-      - username
+        - password
+        - username
       type: object
       properties:
         username:
           type: string
-          example: admin
+          example: nil
         password:
           type: string
           format: password
-          example: password123
+          example: nil
     LoginResponse:
       required:
-      - expiresIn
-      - token
+        - expiresIn
+        - token
       type: object
       properties:
         token:
@@ -178,8 +179,8 @@ components:
         token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
     Error:
       required:
-      - code
-      - message
+        - code
+        - message
       type: object
       properties:
         code:

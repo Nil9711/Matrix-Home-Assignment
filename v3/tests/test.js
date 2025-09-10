@@ -1,4 +1,4 @@
-const { calculate } = require('../service/DefaultService');
+const { calculate } = require('../service/MathService');
 
 // Simple test runner for async functions
 async function testAsync(name, fn) {
