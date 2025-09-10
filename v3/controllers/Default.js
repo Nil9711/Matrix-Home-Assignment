@@ -1,0 +1,52 @@
+"use strict";
+
+const utils = require("../utils/writer.js");
+const Default = require("../service/DefaultService");
+const auth = require("../middleware/auth.js")
+
+module.exports.calculate = function calculate(
+  req,
+  res,
+  next,
+  body,
+  xOperation
+) {
+  const headers = req.headers;
+
+  if (!auth.verifyToken(headers)) {
+    utils.writeJson(res, { error: 'Unauthorized' }, 401);
+  }
+
+  const operation = headers["x-operation"]
+
+  Default.calculate(req.body, operation)
+    .then((response) => {
+      utils.writeJson(res, response);
+    })
+    .catch((err) => {
+      utils.writeJson(res, err);
+    })
+};
+
+
+module.exports.healthCheck = function healthCheck(req, res, next) {
+  Default.healthCheck()
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
+
+module.exports.login = function login(req, res, next, body) {
+  console.log("Received Login Request");
+  
+  Default.login(body)
+    .then(function (response) {
+      utils.writeJson(res, response);
+    })
+    .catch(function (response) {
+      utils.writeJson(res, response);
+    });
+};
